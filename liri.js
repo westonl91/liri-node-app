@@ -28,22 +28,26 @@ function liri(com) {
 }
 
 function concert(sea) {
-    axios.get("https://rest.bandsintown.com/artists/" + sea + "/events?app_id=codingbootcamp").then(function (response) {
-        if (response.data.length !== 0) {
-            for (var i = 0; i < response.data.length; i++) {
-                var convertedDate = moment(response.data[i].datetime.slice(0, 10)).format("MM/DD/YYYY");
-                console.log("Venue:", response.data[i].venue.name);
-                console.log("Location:", response.data[i].venue.city + ", " + response.data[i].venue.region);
-                console.log("Date:", convertedDate);
-                console.log("======================================");
-                var info = "Venue: " + response.data[i].venue.name + "\n" + "Location: " + response.data[i].venue.city + ", " + response.data[i].venue.region + "\n" + "Date: " + convertedDate + "\n\n";
-                saveData(info);
+    if (sea !== "") {
+        axios.get("https://rest.bandsintown.com/artists/" + sea + "/events?app_id=codingbootcamp").then(function (response) {
+            if (response.data.length !== 0) {
+                for (var i = 0; i < response.data.length; i++) {
+                    var convertedDate = moment(response.data[i].datetime.slice(0, 10)).format("MM/DD/YYYY");
+                    console.log("Venue:", response.data[i].venue.name);
+                    console.log("Location:", response.data[i].venue.city + ", " + response.data[i].venue.region);
+                    console.log("Date:", convertedDate);
+                    console.log("======================================");
+                    var info = "Venue: " + response.data[i].venue.name + "\n" + "Location: " + response.data[i].venue.city + ", " + response.data[i].venue.region + "\n" + "Date: " + convertedDate + "\n\n";
+                    saveData(info);
+                }
+            } else {
+                console.log("Sorry, no concerts could be found for that band.");
             }
-        } else {
-            console.log("Sorry, no concerts could be found for that band.");
-        }
 
-    });
+        });
+    } else {
+        console.log("Please enter a band.");
+    }
 }
 
 function spot(sea) {
@@ -139,7 +143,7 @@ function doWhat() {
 }
 
 function saveData(data) {
-    fs.appendFile("log.txt", data, function(err){
+    fs.appendFile("log.txt", data, function (err) {
         if (err) {
             console.log("something went wrong");
         }
